@@ -65,6 +65,8 @@ import type EwmaBandWidthEstimator from './utils/ewma-bandwidth-estimator';
 import type FetchLoader from './utils/fetch-loader';
 import type { MediaDecodingInfo } from './utils/mediacapabilities-helper';
 import type XhrLoader from './utils/xhr-loader';
+import {findFragmentByPDT} from './controller/fragment-finders';
+import {MediaFragment} from './hls';
 
 /**
  * The `Hls` class is the core of the HLS.js library used to instantiate player instances.
@@ -139,6 +141,10 @@ export default class Hls implements HlsEventEmitter {
    */
   static getMediaSource(): typeof MediaSource | undefined {
     return getMediaSource();
+  }
+
+  static findFragmentByPDT(fragments: MediaFragment[], PDTValue: number | null, maxFragLookUpTolerance: number): MediaFragment | null{
+      return findFragmentByPDT(fragments, PDTValue, maxFragLookUpTolerance)
   }
 
   static get Events(): typeof Events {
