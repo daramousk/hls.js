@@ -67,3 +67,4 @@ export { AttrList } from './utils/attr-list';
 export { fetchSupported } from './utils/fetch-loader';
 export { isSupported, isMSESupported } from './is-supported';
 export { getMediaSource } from './utils/mediasource-helper';
+export {findFragmentByPDT} from './controller/fragment-finders';
