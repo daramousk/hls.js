@@ -1,5 +1,5 @@
 import BaseStreamController, { State } from './base-stream-controller';
-import { findFragmentByPTS } from './fragment-finders';
+import { findFragmentByPDT, findFragmentByPTS } from './fragment-finders';
 import { FragmentState } from './fragment-tracker';
 import { MAX_START_GAP_JUMP } from './gap-controller';
 import TransmuxerInterface from '../demux/transmuxer-interface';
@@ -1115,6 +1115,25 @@ export default class StreamController
 
   public swapAudioCodec() {
     this.audioCodecSwap = !this.audioCodecSwap;
+  }
+
+  protected seekToPTS(pts: number): void {
+    const { media } = this;
+    const mediaFragments: MediaFragment[] | undefined =
+      this.getLevelDetails()?.fragments;
+    if (!media || !mediaFragments) {
+      return;
+    }
+    const fragment = findFragmentByPDT(
+      mediaFragments,
+      pts,
+      this.config.maxFragLookUpTolerance,
+    );
+    if (fragment?.programDateTime) {
+      const newTime = fragment.start + (pts - fragment.programDateTime) / 1000;
+      this.log(`Seeking to ${newTime}`);
+      media.currentTime = newTime;
+    }
   }
 
   /**

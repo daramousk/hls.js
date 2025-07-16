@@ -5,6 +5,7 @@ import { pack } from 'jsonpack';
 import 'promise-polyfill/src/polyfill';
 import { sortObject, copyTextToClipboard } from './demo-utils';
 import { TimelineChart } from './chart/timeline-chart';
+import { findFragmentByPDT } from '../src/controller/fragment-finders';
 
 const CLOUDFLARE_PAGES = __CLOUDFLARE_PAGES__; // replaced in build
 
@@ -266,6 +267,7 @@ function setupGlobals() {
   self.goToMetricsPermaLink = goToMetricsPermaLink;
   self.toggleTab = toggleTab;
   self.toggleTabClick = toggleTabClick;
+  self.seekToPts = seekToPts;
   self.applyConfigEditorValue = applyConfigEditorValue;
 }
 
@@ -1733,6 +1735,11 @@ function addChartEventListeners(hls) {
 function updateConfigEditorValue(obj) {
   const json = JSON.stringify(obj, null, 2);
   configEditor.session.setValue(json);
+}
+
+function seekToPts() {
+  const pts = parseFloat($('#seektopts').val());
+  hls.streamController.seekToPTS(pts);
 }
 
 function applyConfigEditorValue() {
